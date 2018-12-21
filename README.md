@@ -7,7 +7,7 @@ Prototype server for creating interactive "try SPARK / try Ada" webpages
 In addition to Python, this system relies on LXC to sandbox
 the run of executables. To do this, you need
   - a container named "safecontainer"
-  - this container should have a non-admin user 'ubuntu'
+  - this container should have a non-admin user 'unprivileged'
 
 ## Getting started
 

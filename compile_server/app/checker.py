@@ -8,6 +8,7 @@ import json
 import shutil
 import subprocess
 import tempfile
+import sys
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -140,6 +141,14 @@ def get_main(received_json):
 
     return received_json['main']
 
+def get_args(received_json):
+    """Retrieve the program args from the json"""
+
+    if 'prog_args' not in received_json:
+        return None
+
+    return received_json['prog_args']
+
 
 def doctor_main_gpr(tempd, main="", spark_mode=False):
     """Doctor the main.gpr to replace the placeholder with the name of the
@@ -242,6 +251,7 @@ def run_program(request):
         return CrossDomainResponse({'identifier': '', 'message': message})
 
     main = get_main(received_json)
+    args = get_args(received_json)
 
     if not main:
         return CrossDomainResponse(
@@ -262,7 +272,8 @@ def run_program(request):
                 # Launch the program via "safe_run", to sandbox it
                 ["python",
                  os.path.join(os.path.dirname(__file__), 'safe_run.py'),
-                 os.path.join(tempd, main[:-4])],
+                 os.path.join(tempd, main[:-4]),
+                 args],
                ]
 
     print commands

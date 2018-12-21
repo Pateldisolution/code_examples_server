@@ -12,5 +12,8 @@ sources:
         - examples/landing_procedure
     - repo: templates
       examples:
+        - ada_main
+        - inline_code
         - simple_main
+        - spark_main
 ...

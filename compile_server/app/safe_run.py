@@ -26,7 +26,7 @@ def run(command):
     return output
 
 
-def safe_run(main):
+def safe_run(main, args):
     # Make a temporary directory on the container
     tmpdir = run(["mktemp", "-d"])
 
@@ -43,7 +43,7 @@ def safe_run(main):
                          "su", "unprivileged", "-c",
                          ('timeout 10s bash -c "LD_PRELOAD=/preloader.so {}" '
                           '|| echo "{}"').format(
-                              os.path.join(tmpdir, os.path.basename(main)),
+                              " ".join([os.path.join(tmpdir, os.path.basename(main)), args]),
                               INTERRUPT_STRING)],
                         stdout=sys.stdout)
     except Exception:
@@ -60,8 +60,13 @@ if __name__ == '__main__':
     # be launched interactively
     main = sys.argv[1]
 
+    if len(sys.argv) >= 3:
+        args = sys.argv[2]
+    else:
+        args = ''
+
     # lxc commands require a HOME - but this might not be set by nginx:
     # do this here in this case
     if "HOME" not in os.environ:
         os.environ["HOME"] = "/home/compile_server"
-    safe_run(main)
+    safe_run(main, args)

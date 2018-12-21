@@ -9,6 +9,7 @@
 # The code expects that the client will make regular calls to
 # ProcessReader.poll() until the processes are completed.
 
+import codecs
 import os
 import shutil
 import sys
@@ -167,7 +168,7 @@ class ProcessReader(object):
             return []
 
         lines = []
-        with open(self.output_file, "rb") as f:
+        with codecs.open(self.output_file, "rb", encoding='utf8') as f:
             for x in f.readlines():
                 # Doctor: remove the mentions of working dir from output
                 lines.append(x.replace(self.working_dir, '.'))
